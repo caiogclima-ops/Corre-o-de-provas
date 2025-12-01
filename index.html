@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Corretor de Provas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Turmas</h1>
+
+  <table id="Turmas">
+    <tr><th>Selecione uma Turma</th></tr>
+    <tr><td>1º ano A</td></tr>
+    <tr><td>1º ano B</td></tr>
+    <tr><td>1º ano C</td></tr>
+    <tr><td>1º ano D</td></tr>
+    <tr><td>2º ano A</td></tr>
+    <tr><td>2º ano B</td></tr>
+    <tr><td>2º ano C</td></tr>
+    <tr><td>2º ano D</td></tr>
+    <tr><td>3º ano A</td></tr>
+    <tr><td>3º ano B</td></tr>
+    <tr><td>3º ano C</td></tr>
+    <tr><td>3º ano D</td></tr>
+  </table>
+
+  <div id="areaAlunos" style="display: none;">
+    <h1 id="tituloTurma"></h1>
+
+    <table id="Alunos">
+      <tr>
+        <th>Número</th>
+        <th>Aluno</th>
+      </tr>
+    </table>
+
+    <form id="aluno">
+      <input type="text" id="nomeAluno" placeholder="Digite o nome do(a) aluno(a)" required />
+      <input type="submit" value="Adicionar" />
+    </form>
+    <p id="resultado"></p>
+
+    <form id="numeroAluno">
+      <input type="number" id="numAluno" placeholder="Digite o número do(a) aluno(a)" required />
+      <input type="submit" value="Deletar" />
+    </form>
+    <p id="deletado"></p>
+
+    <div class="botoes">
+      <button onclick="ExportarListaAlunos()">Exportar Lista (JSON) (Alunos)</button>
+      <button onclick="ExportarCSVAlunos()">Exportar Lista (CSV) (Alunos)</button>
+      <input type="file" id="importarArquivoAlunos" accept=".json,.csv" />
+      <button onclick="ImportarListaAlunos()">Importar Lista (Alunos)</button>
+      <button id="voltar">Voltar para Turmas</button>
+    </div>
+  </div>
+  
+
+  <table id="Provas">
+    <tr>
+      <th>Número</th>
+      <th>Prova</th>
+      <th>Questões</th>
+    </tr>
+  </table>
+   <form id="prova">
+      <input type="text" id="nomeProva" placeholder="Adicione uma prova" required />
+      <input type="submit" value="Adicionar" />
+    </form>
+    <p id="resultadoProvas"></p>
+
+    <form id="numeroProva">
+      <input type="number" id="numProva" placeholder="Digite o número da prova" required />
+      <input type="submit" value="Deletar" />
+    </form>
+    <p id="deletadoProvas"></p>
+  </div>
+   <div class="botoes">
+      <button onclick="ExportarListaProvas()">Exportar Lista (JSON) (Provas)</button>
+      <button onclick="ExportarCSVProvas()">Exportar Lista (CSV) (Provas)</button>
+      <input type="file" id="importarArquivoProvas" accept=".json,.csv" />
+      <button onclick="ImportarListaProvas()">Importar Lista (Provas)</button>
+    </div>
+<div id="modalProva" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+    background: rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
+  <div style="background:#fff; padding:20px; border-radius:8px; min-width:300px; text-align:center;">
+    <h3 id="modalAlunoNome">Aluno</h3>
+    <select id="selectProvaModal">
+      <option value="">Selecione uma prova</option>
+    </select>
+    <div style="margin-top:15px;">
+      <button id="btnConfirmarProva">Selecionar</button>
+      <button id="btnFecharModal">Cancelar</button>
+    </div>
+  </div>
+</div>
+<h1>Escanear Gabarito em Tempo Real</h1>
+<script async src="https://docs.opencv.org/4.7.0/opencv.js" onload="onOpenCvReady()"></script>
+
+  <div class="container">
+    <button id="btnCapturar" style="display:none;">Capturar Gabarito</button>
+    <button id="btnEnviarIA">Enviar gabarito para IA</button>
+    <button id="btnSalvarNota" style="display:none;">Salvar Nota</button>
+    <div id="resultadoIA"></div>
+    <video id="videoCamera" autoplay playsinline></video>
+  <canvas id="canvasFoto" style="display:none;"></canvas>
+  <canvas id="canvasResultado" width="500" height="400"></canvas>
+  <table id="tabelaResultados"></table>
+</div>
+  <script src="script.js" defer></script>
+</body>
+</html>
