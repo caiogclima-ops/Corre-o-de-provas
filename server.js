@@ -48,8 +48,8 @@ Se não souber, use "marcada": null.
     {
       role: "user",
       content: [
-        { type: "text", text: prompt },
-        { type: "image_url", image_url: dataUri }
+        { type: "input_text", text: prompt },
+        { type: "input_image", image_url: dataUri }
       ]
     }
   ]
@@ -78,4 +78,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () =>
   console.log("Servidor rodando em http://localhost:" + PORT)
 );
+
 
