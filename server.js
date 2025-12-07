@@ -18,6 +18,19 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
+function estimarTokensImagem(base64String) {
+  const tamanhoBytes = (base64String.length * 3) / 4;
+
+  const kb = tamanhoBytes / 1024;
+
+  const tokens = Math.round(kb * 10);
+
+  return {
+    kb: Math.round(kb),
+    tokens
+  };
+}
+
 app.post("/analisar-gabarito", async (req, res) => {
   try {
     const { imageBase64 } = req.body;
@@ -25,6 +38,12 @@ app.post("/analisar-gabarito", async (req, res) => {
     if (!imageBase64) {
       return res.status(400).json({ error: "imageBase64 ausente" });
     }
+
+    const estimativa = estimarTokensImagem(imageBase64);
+
+    alert("📸 Tamanho da imagem:", estimativa.kb, "KB");
+    alert("🔢 Tokens estimados:", estimativa.tokens);
+
 
     const prompt = `
 Você recebe uma imagem de gabarito.
@@ -43,19 +62,20 @@ Se não souber, use "marcada": null.
     const dataUri = `data:image/jpeg;base64,${imageBase64}`;
 
     const response = await openai.responses.create({
-  model: "gpt-4o-mini",
-  input: [
-    {
-      role: "user",
-      content: [
-        { type: "input_text", text: prompt },
-        { type: "input_image", image_url: dataUri }
+      model: "gpt-4o-mini",
+      input: [
+        {
+          role: "user",
+          content: [
+            { type: "input_text", text: prompt },
+            { type: "input_image", image_url: dataUri }
+          ]
+        }
       ]
-    }
-  ]
-});
+    });
+
     const msg = response.output_text;
-    
+
     let parsed = null;
     try {
       parsed = JSON.parse(msg.slice(msg.indexOf("{")));
@@ -66,7 +86,11 @@ Se não souber, use "marcada": null.
       });
     }
 
-    return res.json(parsed);
+    return res.json({
+      sucesso: true,
+      estimativaTokens: estimativa,
+      questoes: parsed.questoes
+    });
 
   } catch (err) {
     console.error(err);
@@ -74,9 +98,8 @@ Se não souber, use "marcada": null.
   }
 });
 
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () =>
   console.log("Servidor rodando em http://localhost:" + PORT)
 );
-
-
