@@ -42,23 +42,20 @@ Se não souber, use "marcada": null.
 
     const dataUri = `data:image/jpeg;base64,${imageBase64}`;
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "user",
-          content: [
-            { type: "input_text", text: prompt },
-            { type: "input_image", image_url: dataUri }
-          ]
-        }
-      ],
-      max_tokens: 600,
-      temperature: 0
-    });
-
-    const msg = response.choices[0].message.content;
-
+    const response = await openai.responses.create({
+  model: "gpt-4o-mini",
+  input: [
+    {
+      role: "user",
+      content: [
+        { type: "text", text: prompt },
+        { type: "image_url", image_url: dataUri }
+      ]
+    }
+  ]
+});
+    const msg = response.output_text;
+    
     let parsed = null;
     try {
       parsed = JSON.parse(msg.slice(msg.indexOf("{")));
@@ -81,3 +78,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () =>
   console.log("Servidor rodando em http://localhost:" + PORT)
 );
+
